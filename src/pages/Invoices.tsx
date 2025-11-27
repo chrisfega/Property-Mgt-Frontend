@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Download, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Plus, Search, CheckCircle, XCircle } from 'lucide-react';
 import api from '../services/api';
 import { GenerateInvoiceModal } from '../components/GenerateInvoiceModal';
 import { toast } from 'react-toastify';

@@ -10,7 +10,7 @@ const tenantSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),
-  status: z.enum(['ACTIVE', 'PENDING', 'INACTIVE']).default('ACTIVE'),
+  status: z.enum(['ACTIVE', 'PENDING', 'INACTIVE']),
 });
 
 type TenantFormData = z.infer<typeof tenantSchema>;

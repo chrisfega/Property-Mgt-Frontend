@@ -10,7 +10,7 @@ const invoiceSchema = z.object({
   tenantId: z.string().min(1, 'Tenant is required'),
   amount: z.number().min(0, 'Amount must be positive'),
   dueDate: z.string().min(1, 'Due date is required'),
-  type: z.enum(['RENT', 'UTILITY', 'MAINTENANCE', 'OTHER']).default('RENT'),
+  type: z.enum(['RENT', 'UTILITY', 'MAINTENANCE', 'OTHER']),
   description: z.string().optional(),
 });
 

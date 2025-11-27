@@ -10,7 +10,7 @@ const maintenanceSchema = z.object({
   propertyId: z.string().min(1, 'Property is required'),
   unitId: z.string().optional(),
   description: z.string().min(1, 'Description is required'),
-  priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']).default('MEDIUM'),
+  priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']),
 });
 
 type MaintenanceFormData = z.infer<typeof maintenanceSchema>;
