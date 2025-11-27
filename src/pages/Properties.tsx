@@ -18,6 +18,9 @@ interface Property {
 
 export const Properties: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   // const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<string | null>(null);
@@ -72,7 +75,7 @@ export const Properties: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Properties</h1>
+        <h1 className="text-2xl font-bold text-foreground">Properties</h1>
         <button 
           onClick={() => setIsAddModalOpen(true)}
           className="flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
@@ -84,7 +87,7 @@ export const Properties: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.map(property => (
-              <div key={property.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div key={property.id} className="bg-card rounded-lg shadow-sm border border-border overflow-hidden">
                   {property.imageUrl && (
                     <img 
                       src={property.imageUrl} 
@@ -95,22 +98,22 @@ export const Properties: React.FC = () => {
                   <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
                           <div>
-                              <h3 className="text-lg font-semibold text-gray-900">{property.name}</h3>
-                              <p className="text-sm text-gray-500">{property.addressLine1}, {property.city}</p>
+                              <h3 className="text-lg font-semibold text-foreground">{property.name}</h3>
+                              <p className="text-sm text-muted-foreground">{property.addressLine1}, {property.city}</p>
                           </div>
-                          <span className="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">{property.type}</span>
+                          <span className="px-2 py-1 text-xs font-medium bg-secondary text-foreground rounded-full">{property.type}</span>
                       </div>
                       <div className="mb-4">
-                          <p className="text-sm text-gray-600">Units: {property.units.length}</p>
+                          <p className="text-sm text-muted-foreground">Units: {property.units.length}</p>
                       </div>
                       <div className="flex justify-end space-x-2">
                           <button 
                             onClick={() => handleEdit(property)}
-                            className="p-2 text-gray-400 hover:text-primary"
+                            className="p-2 text-muted-foreground hover:text-primary"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
-                          <button onClick={() => confirmDelete(property.id)} className="p-2 text-gray-400 hover:text-primary/80"><Trash2 className="w-4 h-4" /></button>
+                          <button onClick={() => confirmDelete(property.id)} className="p-2 text-muted-foreground hover:text-destructive"><Trash2 className="w-4 h-4" /></button>
                       </div>
                   </div>
               </div>

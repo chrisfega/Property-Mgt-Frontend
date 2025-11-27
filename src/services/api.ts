@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:4000/api/v1',
+  baseURL: 'https://prop-mgt-backend-api-production.up.railway.app/api/v1',
+  // baseURL: 'http://localhost:4000/api/v1', // Secondary: Localhost
 });
 
 api.interceptors.request.use((config) => {

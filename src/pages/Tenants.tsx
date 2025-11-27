@@ -22,6 +22,7 @@ import { ConfirmationModal } from '../components/ConfirmationModal';
 
 export const Tenants: React.FC = () => {
   const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   // const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [tenantToDelete, setTenantToDelete] = useState<string | null>(null);
@@ -87,42 +88,42 @@ export const Tenants: React.FC = () => {
         onSuccess={fetchTenants} 
       />
 
-      <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-card shadow-sm rounded-lg overflow-hidden border border-border">
+        <table className="min-w-full divide-y divide-border">
+          <thead className="bg-secondary/50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Contact</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Unit</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-card divide-y divide-border">
             {tenants.map((tenant) => (
               <tr key={tenant.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{tenant.fullName}</div>
+                  <div className="text-sm font-medium text-foreground">{tenant.fullName}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{tenant.email}</div>
-                  <div className="text-sm text-gray-500">{tenant.phone}</div>
+                  <div className="text-sm text-muted-foreground">{tenant.email}</div>
+                  <div className="text-sm text-muted-foreground">{tenant.phone}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    tenant.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 
-                    tenant.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 
-                    'bg-primary text-red-800'
+                    tenant.status === 'ACTIVE' ? 'bg-green-500/10 text-green-500' : 
+                    tenant.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-500' : 
+                    'bg-destructive/10 text-destructive'
                   }`}>
                     {tenant.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                   {tenant.currentUnit ? `${tenant.currentUnit.property.name} - ${tenant.currentUnit.name}` : 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button className="text-primary hover:text-primary/80 mr-4"><Edit className="w-4 h-4" /></button>
-                  <button onClick={() => confirmDelete(tenant.id)} className="text-red-600 hover:text-red-900"><Trash2 className="w-4 h-4" /></button>
+                  <button onClick={() => confirmDelete(tenant.id)} className="text-destructive hover:text-destructive/80"><Trash2 className="w-4 h-4" /></button>
                 </td>
               </tr>
             ))}
