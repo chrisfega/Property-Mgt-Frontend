@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,13 +14,14 @@ const landlordSchema = z.object({
 
 type LandlordFormData = z.infer<typeof landlordSchema>;
 
-interface AddLandlordModalProps {
+interface EditLandlordModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  landlord: any;
 }
 
-export const AddLandlordModal: React.FC<AddLandlordModalProps> = ({ isOpen, onClose, onSuccess }) => {
+export const EditLandlordModal: React.FC<EditLandlordModalProps> = ({ isOpen, onClose, onSuccess, landlord }) => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<LandlordFormData>({
     resolver: zodResolver(landlordSchema),
     defaultValues: {
@@ -30,16 +31,25 @@ export const AddLandlordModal: React.FC<AddLandlordModalProps> = ({ isOpen, onCl
     }
   });
 
+  useEffect(() => {
+    if (landlord) {
+      reset({
+        fullName: landlord.fullName,
+        email: landlord.email,
+        phone: landlord.phone || landlord.phoneNumber // Handle both cases just in case
+      });
+    }
+  }, [landlord, reset]);
+
   const onSubmit = async (data: LandlordFormData) => {
     try {
-      await api.post('/landlords', data);
-      toast.success('Landlord added successfully');
-      reset();
+      await api.patch(`/landlords/${landlord.id}`, data);
+      toast.success('Landlord updated successfully');
       onSuccess();
       onClose();
     } catch (error: any) {
-      console.error('Failed to add landlord', error);
-      toast.error(error.response?.data?.message || 'Failed to add landlord');
+      console.error('Failed to update landlord', error);
+      toast.error(error.response?.data?.message || 'Failed to update landlord');
     }
   };
 
@@ -49,7 +59,7 @@ export const AddLandlordModal: React.FC<AddLandlordModalProps> = ({ isOpen, onCl
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="bg-card border border-border w-full max-w-md rounded-xl shadow-lg overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">Add New Landlord</h2>
+          <h2 className="text-lg font-semibold text-foreground">Edit Landlord</h2>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="w-5 h-5" />
           </button>
@@ -102,7 +112,7 @@ export const AddLandlordModal: React.FC<AddLandlordModalProps> = ({ isOpen, onCl
               disabled={isSubmitting}
               className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors disabled:opacity-50"
             >
-              {isSubmitting ? 'Adding...' : 'Add Landlord'}
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>

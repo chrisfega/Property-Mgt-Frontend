@@ -88,7 +88,7 @@ export const Tenants: React.FC = () => {
         onSuccess={fetchTenants} 
       />
 
-      <div className="bg-card shadow-sm rounded-lg overflow-hidden border border-border">
+      <div className="bg-card shadow-sm rounded-lg overflow-hidden border border-border overflow-x-auto">
         <table className="min-w-full divide-y divide-border">
           <thead className="bg-secondary/50">
             <tr>

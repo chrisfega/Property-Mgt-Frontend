@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Plus, Search, Mail, Phone } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 import { AddLandlordModal } from '../components/AddLandlordModal';
+import { EditLandlordModal } from '../components/EditLandlordModal';
+import { ConfirmationModal } from '../components/ConfirmationModal';
 
 export const Landlords: React.FC = () => {
   const [landlords, setLandlords] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedLandlord, setSelectedLandlord] = useState<any>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [landlordToDelete, setLandlordToDelete] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchLandlords();
@@ -19,8 +27,37 @@ export const Landlords: React.FC = () => {
       setLandlords(response.data.data.landlords);
     } catch (error) {
       console.error('Failed to fetch landlords', error);
+      toast.error('Failed to fetch landlords');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEdit = (landlord: any) => {
+    setSelectedLandlord(landlord);
+    setIsEditModalOpen(true);
+  };
+
+  const confirmDelete = (id: string) => {
+    setLandlordToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!landlordToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await api.delete(`/landlords/${landlordToDelete}`);
+      toast.success('Landlord deleted successfully');
+      fetchLandlords();
+      setIsDeleteModalOpen(false);
+    } catch (error: any) {
+      console.error('Failed to delete landlord', error);
+      toast.error(error.response?.data?.message || 'Failed to delete landlord');
+    } finally {
+      setIsDeleting(false);
+      setLandlordToDelete(null);
     }
   };
 
@@ -41,6 +78,29 @@ export const Landlords: React.FC = () => {
         isOpen={isAddModalOpen} 
         onClose={() => setIsAddModalOpen(false)} 
         onSuccess={fetchLandlords} 
+      />
+
+      {selectedLandlord && (
+        <EditLandlordModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedLandlord(null);
+          }}
+          onSuccess={fetchLandlords}
+          landlord={selectedLandlord}
+        />
+      )}
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Landlord"
+        message="Are you sure you want to delete this landlord? This action cannot be undone."
+        confirmText="Delete"
+        type="danger"
+        isLoading={isDeleting}
       />
 
       <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
@@ -78,7 +138,7 @@ export const Landlords: React.FC = () => {
                       </div>
                       <div className="flex items-center text-muted-foreground">
                         <Phone className="w-3 h-3 mr-2" />
-                        {landlord.phoneNumber}
+                        {landlord.phone || landlord.phoneNumber}
                       </div>
                     </div>
                   </td>
@@ -91,7 +151,22 @@ export const Landlords: React.FC = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-primary hover:text-primary/80 font-medium">View</button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => handleEdit(landlord)}
+                        className="p-2 text-muted-foreground hover:text-primary transition-colors"
+                        title="Edit"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => confirmDelete(landlord.id)}
+                        className="p-2 text-muted-foreground hover:text-destructive transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
