@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 const landlordSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid email address').optional().or(z.literal('')),
   phone: z.string().min(1, 'Phone number is required'),
 });
 
@@ -68,7 +68,7 @@ export const AddLandlordModal: React.FC<AddLandlordModalProps> = ({ isOpen, onCl
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Email</label>
+            <label className="text-sm font-medium text-foreground">Email (Optional)</label>
             <input
               type="email"
               {...register('email')}
